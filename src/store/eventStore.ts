@@ -1,18 +1,46 @@
 import type { Role } from "@/lib/roles";
 
+export type EventPhase = "registration" | "submission" | "judging" | "results";
+
 type Listener = () => void;
 
+const getInitial = <T>(key: string, fallback: T): T => {
+    if (typeof window === "undefined") return fallback;
+    return (localStorage.getItem(key) as T) || fallback;
+};
+
 class EventStore {
-    private role: Role = "participant";
+    private role: Role = getInitial<Role>("event_role", "participant");
+    private phase: EventPhase = getInitial<EventPhase>("event_phase", "submission");
+
     private listeners = new Set<Listener>();
 
     setRole(role: Role) {
         this.role = role;
+        if (typeof window !== "undefined") localStorage.setItem("event_role", role);
         this.emit();
+    }
+
+    setPhase(phase: EventPhase) {
+        this.phase = phase;
+        if (typeof window !== "undefined") localStorage.setItem("event_phase", phase);
+        this.emit();
+    }
+
+    canSubmit() {
+        return this.phase === "submission" && this.role === "participant";
+    }
+
+    canJudge() {
+        return this.phase === "judging" && this.role === "judge";
     }
 
     getRole(): Role {
         return this.role;
+    }
+
+    getPhase(): EventPhase {
+        return this.phase;
     }
 
     subscribe(fn: Listener): () => void {
