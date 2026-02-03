@@ -4,14 +4,25 @@ export type EventPhase = "registration" | "submission" | "judging" | "results";
 
 type Listener = () => void;
 
-const getInitial = <T>(key: string, fallback: T): T => {
+const getInitial = <T extends string>(
+    key: string,
+    allowed: readonly T[],
+    fallback: T
+): T => {
     if (typeof window === "undefined") return fallback;
-    return (localStorage.getItem(key) as T) || fallback;
+    const value = localStorage.getItem(key);
+    return allowed.includes(value as T) ? (value as T) : fallback;
 };
 
+
 class EventStore {
-    private role: Role = getInitial<Role>("event_role", "participant");
-    private phase: EventPhase = getInitial<EventPhase>("event_phase", "submission");
+    private role: Role = getInitial<Role>("event_role", ["organizer", "judge", "participant"], "participant");
+
+    private phase: EventPhase = getInitial<EventPhase>(
+        "event_phase",
+        ["registration", "submission", "judging", "results"],
+        "submission"
+    );
 
     private listeners = new Set<Listener>();
 
