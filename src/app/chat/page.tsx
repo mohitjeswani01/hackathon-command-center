@@ -5,6 +5,8 @@ import { useMcpServers } from "@/components/tambo/mcp-config-modal";
 import { components, tools } from "@/lib/tambo";
 import { TamboProvider } from "@tambo-ai/react";
 import RoleSwitcher from "@/components/shell/RoleSwitcher";
+import GenerativeRoot from "@/components/generative/GenerativeRoot";
+
 
 
 /**
@@ -31,6 +33,7 @@ export default function Home() {
     >
       <div className="h-screen">
         <RoleSwitcher />
+        <GenerativeRoot />
         <MessageThreadFull />
       </div>
     </TamboProvider>
