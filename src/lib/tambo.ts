@@ -1,102 +1,92 @@
-/**
- * @file tambo.ts
- * @description Central configuration file for Tambo components and tools
- *
- * This file serves as the central place to register your Tambo components and tools.
- * It exports arrays that will be used by the TamboProvider.
- *
- * Read more about Tambo at https://tambo.co/docs
- */
-
-import { Graph, graphSchema } from "@/components/tambo/graph";
-import { DataCard, dataCardSchema } from "@/components/ui/card-data";
-import {
-  getCountryPopulations,
-  getGlobalPopulationTrend,
-} from "@/services/population-stats";
 import type { TamboComponent } from "@tambo-ai/react";
 import { TamboTool } from "@tambo-ai/react";
 import { z } from "zod";
 
+import { eventStore } from "@/store/eventStore";
+import PersonalStatus from "@/components/widgets/PersonalStatus";
+import JudgingQueue from "@/components/widgets/JudgingQueue";
+import Timeline from "@/components/widgets/Timeline";
+import Countdown from "@/components/widgets/Countdown";
+
 /**
- * tools
- *
- * This array contains all the Tambo tools that are registered for use within the application.
- * Each tool is defined with its name, description, and expected props. The tools
- * can be controlled by AI to dynamically fetch data based on user interactions.
+ * =========================
+ * Tambo Tools
+ * =========================
  */
 
 export const tools: TamboTool[] = [
   {
-    name: "countryPopulation",
-    description:
-      "A tool to get population statistics by country with advanced filtering options",
-    tool: getCountryPopulations,
+    name: "set-role",
+    description: "Change the active user role in the hackathon",
+    tool: ({ role }) => {
+      eventStore.setRole(role);
+      return { success: true };
+    },
     inputSchema: z.object({
-      continent: z.string().optional(),
-      sortBy: z.enum(["population", "growthRate"]).optional(),
-      limit: z.number().optional(),
-      order: z.enum(["asc", "desc"]).optional(),
+      role: z.enum(["organizer", "judge", "participant"]),
     }),
-    outputSchema: z.array(
-      z.object({
-        countryCode: z.string(),
-        countryName: z.string(),
-        continent: z.enum([
-          "Asia",
-          "Africa",
-          "Europe",
-          "North America",
-          "South America",
-          "Oceania",
-        ]),
-        population: z.number(),
-        year: z.number(),
-        growthRate: z.number(),
-      }),
-    ),
+    outputSchema: z.object({
+      success: z.boolean(),
+    }),
+  },
+
+  {
+    name: "set-phase",
+    description: "Advance or change the hackathon phase",
+    tool: ({ phase }) => {
+      eventStore.setPhase(phase);
+      return { success: true };
+    },
+    inputSchema: z.object({
+      phase: z.enum(["registration", "submission", "judging", "results"]),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+    }),
   },
   {
-    name: "globalPopulation",
-    description:
-      "A tool to get global population trends with optional year range filtering",
-    tool: getGlobalPopulationTrend,
-    inputSchema: z.object({
-      startYear: z.number().optional(),
-      endYear: z.number().optional(),
+    name: "advance-to-results",
+    description: "Immediately end judging and show final results",
+    tool: () => {
+      eventStore.setPhase("results");
+      return { success: true };
+    },
+    inputSchema: z.object({}),
+    outputSchema: z.object({
+      success: z.boolean(),
     }),
-    outputSchema: z.array(
-      z.object({
-        year: z.number(),
-        population: z.number(),
-        growthRate: z.number(),
-      }),
-    ),
   },
-  // Add more tools here
 ];
 
 /**
- * components
- *
- * This array contains all the Tambo components that are registered for use within the application.
- * Each component is defined with its name, description, and expected props. The components
- * can be controlled by AI to dynamically render UI elements based on user interactions.
+ * =========================
+ * Tambo Components
+ * =========================
  */
+
 export const components: TamboComponent[] = [
   {
-    name: "Graph",
-    description:
-      "A component that renders various types of charts (bar, line, pie) using Recharts. Supports customizable data visualization with labels, datasets, and styling options.",
-    component: Graph,
-    propsSchema: graphSchema,
+    name: "PersonalStatus",
+    description: "Shows current role and phase",
+    component: PersonalStatus,
+    propsSchema: z.object({}),
   },
   {
-    name: "DataCard",
-    description:
-      "A component that displays options as clickable cards with links and summaries with the ability to select multiple items.",
-    component: DataCard,
-    propsSchema: dataCardSchema,
+    name: "JudgingQueue",
+    description: "List of submissions waiting for review",
+    component: JudgingQueue,
+    propsSchema: z.object({}),
   },
-  // Add more components here
+  {
+    name: "Timeline",
+    description: "Hackathon phase timeline",
+    component: Timeline,
+    propsSchema: z.object({}),
+  },
+  {
+    name: "Countdown",
+    description: "Countdown timer to next phase",
+    component: Countdown,
+    propsSchema: z.object({}),
+  },
 ];

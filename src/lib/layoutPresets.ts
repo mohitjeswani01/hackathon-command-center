@@ -8,4 +8,7 @@ export const layouts = {
     organizer: {
         panels: ["PersonalStatus", "JudgingQueue", "Timeline", "Countdown"],
     },
+    results: {
+        panels: ["Timeline", "JudgingQueue"]
+    },
 };
