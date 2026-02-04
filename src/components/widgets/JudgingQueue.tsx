@@ -1,3 +1,5 @@
+"use client";
+
 import { submissions } from "@/store/submissions";
 import { useEventStore } from "@/lib/useEventStore";
 

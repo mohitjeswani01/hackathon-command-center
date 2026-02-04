@@ -27,7 +27,7 @@ export default function GenerativeRoot() {
         results_mode: layouts.results,
     } as const;
 
-    const layout = layoutMap[intent];
+    const layout = layoutMap[intent] ?? layouts.participant;
 
     return <LayoutComposer layout={layout} />;
 }

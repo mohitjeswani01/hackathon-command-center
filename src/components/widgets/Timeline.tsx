@@ -2,8 +2,10 @@
 
 import { useEventStore } from "@/lib/useEventStore";
 import { useEffect, useState } from "react";
+import type { EventPhase } from "@/store/eventStore";
 
-const phases = ["registration", "submission", "judging", "results"];
+
+const phases: EventPhase[] = ["registration", "submission", "judging", "results"];
 
 export default function Timeline() {
     const { phase, setPhase } = useEventStore();
@@ -24,7 +26,7 @@ export default function Timeline() {
                         return (
                             <button
                                 key={p}
-                                onClick={() => setPhase(p as any)}
+                                onClick={() => setPhase(p)}
                                 className={`
                                     flex flex-col items-center gap-2 group transition-all duration-300
                                     ${isActive ? "scale-105" : "hover:scale-105"}
