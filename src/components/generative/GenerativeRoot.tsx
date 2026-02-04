@@ -7,20 +7,27 @@ import LayoutComposer from "./LayoutComposer";
 import { eventStore } from "@/store/eventStore";
 
 export default function GenerativeRoot() {
+    const [mounted, setMounted] = useState(false);
     const [intent, setIntent] = useState(resolveIntent());
 
     useEffect(() => {
+        setMounted(true);
+
         return eventStore.subscribe(() => {
             setIntent(resolveIntent());
         });
     }, []);
 
-    const layout =
-        intent === "organizer_mode"
-            ? layouts.organizer
-            : intent === "judge_mode"
-                ? layouts.judge
-                : layouts.participant;
+    if (!mounted) return null;
+
+    const layoutMap = {
+        organizer_mode: layouts.organizer,
+        judge_mode: layouts.judge,
+        participant_mode: layouts.participant,
+        results_mode: layouts.results,
+    } as const;
+
+    const layout = layoutMap[intent];
 
     return <LayoutComposer layout={layout} />;
 }

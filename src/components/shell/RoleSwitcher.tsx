@@ -5,13 +5,19 @@ import { eventStore } from "@/store/eventStore";
 import { useEffect, useState } from "react";
 
 export default function RoleSwitcher() {
-    const [role, setRole] = useState<Role>(eventStore.getRole());
+    const [mounted, setMounted] = useState(false);
+    const [role, setRole] = useState<Role>("participant");
 
     useEffect(() => {
+        setMounted(true);
+        setRole(eventStore.getRole());
+
         return eventStore.subscribe(() => {
             setRole(eventStore.getRole());
         });
     }, []);
+
+    if (!mounted) return null;
 
     return (
         <div className="flex gap-2 mb-4">
