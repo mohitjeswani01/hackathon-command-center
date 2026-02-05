@@ -5,7 +5,7 @@ export type Team = {
 };
 
 export const teams: Team[] = [
-    { id: "t1", name: "CodeStorm", members: ["u8"] },
+    { id: "t1", name: "CodeStorm", members: ["u1"] },
     { id: "t2", name: "HackSquad", members: ["u44", "u45"] },
     { id: "t3", name: "CyberSentinels", members: ["u46", "u47"] },
     { id: "t4", name: "DataDrifters", members: ["u48", "u49"] },

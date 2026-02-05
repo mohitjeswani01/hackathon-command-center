@@ -41,12 +41,23 @@ export default function Countdown() {
     };
 
     return (
-        <div className="border border-gray-100 rounded-xl p-6 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] h-full flex flex-col justify-center items-center">
-            <h3 className="font-semibold text-gray-400 uppercase tracking-wider text-xs mb-2">Time Remaining</h3>
-            <div className="text-4xl font-mono mobile-nums tracking-tight font-bold text-gray-900 tabular-nums">
-                {phase === "results" ? "00:00:00" : formatTime(seconds)}
+        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm h-full flex flex-col justify-center items-center text-center">
+
+            <div className={`transition-all duration-500 ${seconds < 300 ? "scale-110 text-red-600" : "text-zinc-900"}`}>
+                <div className="text-[72px] leading-none font-bold tracking-tighter tabular-nums font-mono">
+                    {phase === "results" ? "00:00" : formatTime(seconds).split(":").slice(0, 2).join(":")}
+                </div>
+                <div className="text-xs font-semibold text-zinc-400 uppercase tracking-[0.2em] mt-2">
+                    {phase === "results" ? "Event Completed" : "Hours : Minutes"}
+                </div>
             </div>
-            <div className="text-xs text-gray-400 mt-1 capitalize font-medium">{phase.replace("_", " ")} Phase</div>
+
+            <div className="mt-6 flex items-center gap-2 px-3 py-1.5 bg-zinc-50 rounded-full border border-zinc-100">
+                <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-[10px] font-medium text-zinc-500 uppercase tracking-wide">
+                    {phase.replace("_", " ")} Phase Active
+                </span>
+            </div>
         </div>
     );
 }
