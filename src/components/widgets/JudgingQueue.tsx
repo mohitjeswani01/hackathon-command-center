@@ -39,9 +39,7 @@ export default function JudgingQueue() {
                         </div>
                         <span className={`
                             text-[10px] px-2 py-1 rounded font-semibold uppercase tracking-wide
-                            ${s.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : ''}
-                            ${s.status === 'approved' ? 'bg-green-100 text-green-700' : ''}
-                            ${s.status === 'rejected' ? 'bg-red-100 text-red-700' : ''}
+                            ${s.status === 'pending' ? 'bg-yellow-100 text-yellow-700' : 'bg-purple-100 text-purple-700'}
                         `}>
                             {s.status}
                         </span>

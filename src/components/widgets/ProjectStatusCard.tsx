@@ -17,8 +17,6 @@ export default function ProjectStatusCard({ title, description, status, isSolo, 
 
     const getStatusConfig = () => {
         switch (status) {
-            case "approved": return { color: "bg-green-500", text: "text-green-700", bg: "bg-green-50", label: "Approved" };
-            case "rejected": return { color: "bg-red-500", text: "text-red-700", bg: "bg-red-50", label: "Needs Revision" };
             case "reviewed": return { color: "bg-purple-500", text: "text-purple-700", bg: "bg-purple-50", label: "Reviewed" };
             default: return { color: "bg-yellow-500", text: "text-yellow-700", bg: "bg-yellow-50", label: "Pending Review" };
         }
