@@ -1,131 +1,112 @@
-# Tambo Template
+# Hackathon Command Center 
 
-This is a starter NextJS app with Tambo hooked up to get your AI app development started quickly.
+### Orchestrate by Instinct.
 
-## Get Started
+![Hero Banner](https://placehold.co/1200x400/18181b/ffffff?text=Hackathon+Command+Center)  
+*(Add your Hero GIF/Screenshot here)*
 
-1. Run `npm create-tambo@latest my-tambo-app` for a new project
+**Hackathon Command Center** is a **Generative UI** dashboard powered by AI, designed to transform how hackathon events are managed. It abandons static admin panels for a dynamic, conversation-driven interface that adapts in real-time to the user's role and the event's lifecycle.
 
-2. `npm install`
+Built with **Next.js**, **Framer Motion**, and **Tailwind CSS**, it features a premium "Linear-style" aesthetic and a powerful AI assistant that acts as the central nervous system of the event.
 
-3. `npx tambo init`
+---
 
-- or rename `example.env.local` to `.env.local` and add your tambo API key you can get for free [here](https://tambo.co/dashboard).
+## ✨ Features
 
-4. Run `npm run dev` and go to `localhost:3000` to use the app!
+### 🧠 Generative UI Engine
+The interface isn't static. It morphs based on context.
+- **Dynamic Widgets**: Components like `JudgingQueue`, `Timeline`, and `ProjectStatusCard` appear and update strictly when relevant.
+- **Context-Aware Layouts**: The dashboard restructures itself depending on whether you are an Organizer, Judge, or Participant.
 
-## Customizing
+### 🎭 Role-Based Experience
+One platform, three distinct realities.
+- **👑 Organizer Mode**: The "God View". Control event phases, monitor timelines, and oversee the entire pipeline.
+- **⚖️ Judge Mode**: Focused and distraction-free. View the judging queue, review projects, and submit scores without clutter.
+- **👤 Participant Mode**: Friendly and supportive. Check project status, view countdowns, and get AI guidance.
 
-### Change what components tambo can control
+### 💬 AI Command Interface
+Forget clicking through menus. Just ask.
+- *"Change phase to Judging"* (Organizer only)
+- *"What is the status of CodeStorm?"* (Smart Lookup)
+- *"Show me the project timeline"*
 
-You can see how components are registered with tambo in `src/lib/tambo.ts`:
+### 🎨 Premium Aesthetic
+- **Visual Polish**: Glassmorphism, subtle gradients, and smooth Framer Motion animations.
+- **Responsive & Resizable**: Fully draggable sidebar for a customizable workspace.
 
-```tsx
-export const components: TamboComponent[] = [
-  {
-    name: "Graph",
-    description:
-      "A component that renders various types of charts (bar, line, pie) using Recharts. Supports customizable data visualization with labels, datasets, and styling options.",
-    component: Graph,
-    propsSchema: graphSchema,
-  },
-  // Add more components here
-];
-```
+---
 
-You can install the graph component into any project with:
+## 🚀 The Experience
 
-```bash
-npx tambo add graph
-```
+### 1. For Organizers
+*Command and Control.*
+As an organizer, you hold the keys. Use the AI to advance the hackathon from **Registration** -> **Submission** -> **Judging** -> **Results**.
+> *"Change phase to Submission"*  
+> *"Advance to Results"*
 
-The example Graph component demonstrates several key features:
+![Organizer Dashboard](https://placehold.co/800x450/e4e4e7/52525b?text=Organizer+View)  
+*(Add Organizer UI Screenshot here)*
 
-- Different prop types (strings, arrays, enums, nested objects)
-- Multiple chart types (bar, line, pie)
-- Customizable styling (variants, sizes)
-- Optional configurations (title, legend, colors)
-- Data visualization capabilities
+### 2. For Judges
+*Review with Focus.*
+When the phase hits **Judging**, your dashboard automatically highlights the `JudgingQueue`. You see what matters: submissions pending review.
+> *"Show me pending submissions"*
 
-Update the `components` array with any component(s) you want tambo to be able to use in a response!
+![Judge Dashboard](https://placehold.co/800x450/e4e4e7/52525b?text=Judge+View)  
+*(Add Judge UI Screenshot here)*
 
-You can find more information about the options [here](https://docs.tambo.co/concepts/generative-interfaces/generative-components)
+### 3. For Participants
+*Stay Informed.*
+No more guessing. Participants can ask the AI about their specific status. The system supports both **Solo** and **Team** entries intelligntly.
+> *"I am Mohit, is my project reviewed?"*  
+> *"What is the status of team DataDrifters?"*
 
-### Add tools for tambo to use
+![Participant Dashboard](https://placehold.co/800x450/e4e4e7/52525b?text=Participant+View)  
+*(Add Participant UI Screenshot here)*
 
-Tools are defined with `inputSchema` and `outputSchema`:
+---
 
-```tsx
-export const tools: TamboTool[] = [
-  {
-    name: "globalPopulation",
-    description:
-      "A tool to get global population trends with optional year range filtering",
-    tool: getGlobalPopulationTrend,
-    inputSchema: z.object({
-      startYear: z.number().optional(),
-      endYear: z.number().optional(),
-    }),
-    outputSchema: z.array(
-      z.object({
-        year: z.number(),
-        population: z.number(),
-        growthRate: z.number(),
-      }),
-    ),
-  },
-];
-```
+## 🛠️ Tech Stack
 
-Find more information about tools [here.](https://docs.tambo.co/concepts/tools)
+- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/)
+- **State Management**: Zustand
+- **AI/LLM Integration**: Custom Generative UI Hooks (`useTambo`)
+- **Icons**: Lucide React
 
-### The Magic of Tambo Requires the TamboProvider
+---
 
-Make sure in the TamboProvider wrapped around your app:
+## 🏗️ Getting Started
 
-```tsx
-...
-<TamboProvider
-  apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
-  components={components} // Array of components to control
-  tools={tools} // Array of tools it can use
->
-  {children}
-</TamboProvider>
-```
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/hackathon-command-center.git
+   cd hackathon-command-center
+   ```
 
-In this example we do this in the `Layout.tsx` file, but you can do it anywhere in your app that is a client component.
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Voice input
+3. **Run the development server**
+   ```bash
+   npm run dev
+   ```
 
-The template includes a `DictationButton` component using the `useTamboVoice` hook for speech-to-text input.
+4. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000) to stand on the bridge of your new Command Center.
 
-### MCP (Model Context Protocol)
+---
 
-The template includes MCP support for connecting to external tools and resources. You can use the MCP hooks from `@tambo-ai/react/mcp`:
+## 🔮 Future Roadmap
 
-- `useTamboMcpPromptList` - List available prompts from MCP servers
-- `useTamboMcpPrompt` - Get a specific prompt
-- `useTamboMcpResourceList` - List available resources
+- [ ] Real-time WebSocket updates for multi-user sync.
+- [ ] Integration with Devpost/GitHub APIs.
+- [ ] Voice Command support.
 
-See `src/components/tambo/mcp-components.tsx` for example usage.
+---
 
-### Change where component responses are shown
-
-The components used by tambo are shown alongside the message response from tambo within the chat thread, but you can have the result components show wherever you like by accessing the latest thread message's `renderedComponent` field:
-
-```tsx
-const { thread } = useTambo();
-const latestComponent =
-  thread?.messages[thread.messages.length - 1]?.renderedComponent;
-
-return (
-  <div>
-    {latestComponent && (
-      <div className="my-custom-wrapper">{latestComponent}</div>
-    )}
-  </div>
-);
-```
-
-For more detailed documentation, visit [Tambo's official docs](https://docs.tambo.co).
+**Orchestrate by Instinct.**  
+*Built for the future of hackathons.*
