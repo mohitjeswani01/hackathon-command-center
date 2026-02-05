@@ -1,33 +1,88 @@
 export type Submission = {
     id: string;
-    teamId: string;
     title: string;
+    description: string;
     status: "pending" | "reviewed";
     score: number | null;
+    // Solo vs Team structure
+    isSolo: boolean;
+    participant?: string; // For solo
+    team?: {              // For teams
+        id: string;
+        name: string;
+        members: string[];
+    };
 };
 
 export const submissions: Submission[] = [
-    { id: "s1", teamId: "t1", title: "hackathon command center", status: "pending", score: null },
-    { id: "s2", teamId: "t2", title: "Smart Campus", status: "reviewed", score: 8.5 },
-    // 20 New Submissions
-    { id: "s3", teamId: "t3", title: "Blockchain Supply Tracker", status: "reviewed", score: 9.2 },
-    { id: "s4", teamId: "t4", title: "Eco-Friendly Routing API", status: "pending", score: null },
-    { id: "s5", teamId: "t5", title: "Neural Style Transfer Tool", status: "reviewed", score: 7.8 },
-    { id: "s6", teamId: "t6", title: "Real-time Sign Language Translator", status: "pending", score: null },
-    { id: "s7", teamId: "t7", title: "Pothole Detection System", status: "reviewed", score: 8.9 },
-    { id: "s8", teamId: "t8", title: "Smart Inventory Manager", status: "pending", score: null },
-    { id: "s9", teamId: "t9", title: "Deepfake Audio Detector", status: "reviewed", score: 9.5 },
-    { id: "s10", teamId: "t10", title: "Augmented Reality Furniture Placer", status: "pending", score: null },
-    { id: "s11", teamId: "t11", title: "Automated Crop Disease Monitor", status: "reviewed", score: 8.2 },
-    { id: "s12", teamId: "t12", title: "Voice-Controlled Smart Mirror", status: "pending", score: null },
-    { id: "s13", teamId: "t13", title: "Local Store Loyalty Engine", status: "reviewed", score: 7.4 },
-    { id: "s14", teamId: "t14", title: "Privacy-Focused Messaging App", status: "pending", score: null },
-    { id: "s15", teamId: "t15", title: "Decentralized Voting Platform", status: "reviewed", score: 9.0 },
-    { id: "s16", teamId: "t16", title: "Smart Traffic Management System", status: "pending", score: null },
-    { id: "s17", teamId: "t17", title: "AI-Powered Personal Finance Bot", status: "reviewed", score: 8.7 },
-    { id: "s18", teamId: "t18", title: "E-waste Recycling Portal", status: "pending", score: null },
-    { id: "s19", teamId: "t19", title: "Health Vitals Dashboard", status: "reviewed", score: 7.9 },
-    { id: "s20", teamId: "t20", title: "Community Help Network", status: "pending", score: null },
-    { id: "s21", teamId: "t21", title: "Predictive Maintenance for Small Factories", status: "reviewed", score: 8.4 },
-    { id: "s22", teamId: "t22", title: "Hyper-Local Delivery Optimizer", status: "pending", score: null },
+    {
+        id: "s1",
+        title: "Hackathon Command Center",
+        description: "A Generative UI dashboard for managing hackathons with AI.",
+        status: "pending",
+        score: null,
+        isSolo: true,
+        participant: "Mohit Jeswani"
+    },
+    {
+        id: "s2",
+        title: "Smart Campus",
+        description: "IoT solution for monitoring university energy usage.",
+        status: "reviewed",
+        score: 8.5,
+        isSolo: false,
+        team: {
+            id: "t2",
+            name: "DataDrifters",
+            members: ["Sarah Chen", "Mike Ross", "Harvey Specter"]
+        }
+    },
+    {
+        id: "s3",
+        title: "Blockchain Supply Tracker",
+        description: "Transparent supply chain management using Ethereum.",
+        status: "pending",
+        score: 9.2,
+        isSolo: false,
+        team: {
+            id: "t3",
+            name: "ChainGang",
+            members: ["Alice Wonder", "Bob Builder"]
+        }
+    },
+    {
+        id: "s4",
+        title: "Eco-Friendly Routing API",
+        description: "Maps API that prioritizes lowest carbon footprint routes.",
+        status: "pending",
+        score: null,
+        isSolo: true,
+        participant: "Eve Polastri"
+    },
+    {
+        id: "s5",
+        title: "Neural Style Transfer Tool",
+        description: "Real-time video filter app using GANs.",
+        status: "reviewed",
+        score: 7.8,
+        isSolo: false,
+        team: {
+            id: "t5",
+            name: "Visionaries",
+            members: ["Vision Paul", "Wanda Maximoff"]
+        }
+    },
+    {
+        id: "s6",
+        title: "Real-time Sign Language Translator",
+        description: "CV model detecting ASL gestures via webcam.",
+        status: "reviewed",
+        score: 6.7,
+        isSolo: false,
+        team: {
+            id: "t6",
+            name: "Gesturize",
+            members: ["Silence Breakers"]
+        }
+    }
 ];
