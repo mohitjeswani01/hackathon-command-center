@@ -15,6 +15,7 @@ import {
   PlusIcon,
   SearchIcon,
   Sparkles,
+  Trash2,
 } from "lucide-react";
 import React, { useMemo } from "react";
 
@@ -37,6 +38,7 @@ interface ThreadHistoryContextValue {
   position?: "left" | "right";
   updateThreadName: (newName: string, threadId?: string) => Promise<void>;
   generateThreadName: (threadId: string) => Promise<TamboThread>;
+  deleteThread: (threadId: string) => Promise<void>;
 }
 
 const ThreadHistoryContext =
@@ -88,6 +90,29 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
       generateThreadName,
     } = useTamboThread();
 
+    const deleteThread = React.useCallback(async (threadId: string) => {
+      const baseUrl = process.env.NEXT_PUBLIC_TAMBO_URL?.replace(/\/$/, "") || "https://api.tambo.ai/v1";
+      const apiKey = process.env.NEXT_PUBLIC_TAMBO_API_KEY;
+
+      try {
+        const res = await fetch(`${baseUrl}/threads/${threadId}`, {
+          method: "DELETE",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+          }
+        });
+
+        if (!res.ok) {
+          console.warn("Delete failed with status:", res.status);
+          // We might want to throw or handle error, but for now just log
+        }
+        await refetch();
+      } catch (e) {
+        console.error("Error deleting thread:", e);
+        throw e;
+      }
+    }, [refetch]);
+
     // Update CSS variable when sidebar collapses/expands
     React.useEffect(() => {
       const sidebarWidth = isCollapsed ? "3rem" : "16rem";
@@ -121,6 +146,7 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
         position,
         updateThreadName,
         generateThreadName,
+        deleteThread,
       }),
       [
         threads,
@@ -136,6 +162,7 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
         position,
         updateThreadName,
         generateThreadName,
+        deleteThread,
       ],
     );
 
@@ -369,6 +396,7 @@ const ThreadHistoryList = React.forwardRef<
     onThreadChange,
     updateThreadName,
     generateThreadName,
+    deleteThread,
     refetch,
   } = useThreadHistoryContext();
 
@@ -463,6 +491,15 @@ const ThreadHistoryList = React.forwardRef<
       setEditingThread(null);
     } catch (error) {
       console.error("Failed to rename thread:", error);
+    }
+  };
+
+  const handleDelete = async (thread: TamboThread) => {
+    try {
+      await deleteThread(thread.id);
+      await refetch();
+    } catch (error) {
+      console.error("Failed to delete thread:", error);
     }
   };
 
@@ -562,6 +599,7 @@ const ThreadHistoryList = React.forwardRef<
               thread={thread}
               onRename={handleRename}
               onGenerateName={handleGenerateName}
+              onDelete={handleDelete}
             />
           </div>
         ))}
@@ -594,10 +632,12 @@ const ThreadOptionsDropdown = ({
   thread,
   onRename,
   onGenerateName,
+  onDelete,
 }: {
   thread: TamboThread;
   onRename: (thread: TamboThread) => void;
   onGenerateName: (thread: TamboThread) => void;
+  onDelete: (thread: TamboThread) => void;
 }) => {
   return (
     <DropdownMenu.Root>
@@ -634,6 +674,16 @@ const ThreadOptionsDropdown = ({
           >
             <Sparkles className="h-3 w-3" />
             Generate Name
+          </DropdownMenu.Item>
+          <DropdownMenu.Item
+            className="flex items-center gap-2 px-2 py-1.5 text-destructive hover:bg-destructive/10 rounded-sm cursor-pointer outline-none transition-colors"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(thread);
+            }}
+          >
+            <Trash2 className="h-3 w-3" />
+            Delete
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

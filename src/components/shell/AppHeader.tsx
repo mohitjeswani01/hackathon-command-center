@@ -4,7 +4,12 @@ import RoleSwitcher from "./RoleSwitcher";
 import { useEventStore } from "@/lib/useEventStore";
 import { useEffect, useState } from "react";
 
-export default function AppHeader() {
+export interface AppHeaderProps {
+    onToggleAi?: () => void;
+    isAiOpen?: boolean;
+}
+
+export default function AppHeader({ onToggleAi, isAiOpen = true }: AppHeaderProps) {
     const { phase } = useEventStore();
     const [mounted, setMounted] = useState(false);
 
@@ -32,9 +37,15 @@ export default function AppHeader() {
                 <RoleSwitcher />
 
                 <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-linear-to-br from-gray-100 to-gray-200 border border-gray-200 flex items-center justify-center text-xs font-semibold text-gray-600">
+                    <button
+                        onClick={onToggleAi}
+                        className={`w-8 h-8 rounded-full border flex items-center justify-center text-xs font-semibold transition-colors cursor-pointer ${isAiOpen
+                            ? 'bg-zinc-900 text-white border-zinc-900'
+                            : 'bg-zinc-50 text-zinc-600 border-zinc-200 hover:bg-zinc-100'
+                            }`}
+                    >
                         AI
-                    </div>
+                    </button>
                 </div>
             </div>
         </header>

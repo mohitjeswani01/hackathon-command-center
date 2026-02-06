@@ -31,6 +31,7 @@ export default function LandingDemo() {
     const [step, setStep] = useState(0);
     const [typedText, setTypedText] = useState("");
     const [isTyping, setIsTyping] = useState(false);
+    const [isAiOpen, setIsAiOpen] = useState(true);
 
     const currentState = DEMO_STATES[step];
 
@@ -95,14 +96,28 @@ export default function LandingDemo() {
                             <div className="w-6 h-6 bg-black rounded flex items-center justify-center text-white text-xs">⌘</div>
                             <span className="text-xs font-semibold text-zinc-900">Command Center</span>
                         </div>
-                        <motion.div
-                            key={`phase-${step}`}
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-[10px] uppercase tracking-wider font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded"
-                        >
-                            {DEMO_STATES[step].phase}
-                        </motion.div>
+                        <div className="flex items-center gap-2">
+                            <motion.div
+                                key={`phase-${step}`}
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-[10px] uppercase tracking-wider font-medium text-zinc-500 bg-zinc-100 px-2 py-1 rounded"
+                            >
+                                {DEMO_STATES[step].phase}
+                            </motion.div>
+                            {!isAiOpen && (
+                                <button
+                                    onClick={() => setIsAiOpen(true)}
+                                    className="p-1.5 hover:bg-zinc-100 rounded-md text-zinc-500 transition-colors"
+                                    title="Open AI Assistant"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                        <line x1="9" y1="3" x2="9" y2="21"></line>
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
                     </motion.div>
 
                     <div className="flex-1 grid grid-cols-2 gap-4">
@@ -177,41 +192,60 @@ export default function LandingDemo() {
             </div>
 
             {/* Right: Chat Simulation */}
-            <div className="w-full md:w-80 bg-white border-l border-zinc-200 flex flex-col z-10">
-                <div className="p-3 border-b border-zinc-100 text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                    AI Assistant
-                </div>
-                <div className="flex-1 p-4 space-y-4 overflow-hidden relative">
-                    {/* Previous messages history simulation could go here but simpler is better */}
-                    <AnimatePresence mode="popLayout">
-                        <motion.div
-                            key={step}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="flex justify-start"
-                        >
-                            <div className="bg-zinc-100 text-zinc-600 rounded-lg rounded-tl-none px-3 py-2 text-xs max-w-[85%]">
-                                {DEMO_STATES[step === 0 ? 2 : step - 1].response}
-                            </div>
-                        </motion.div>
+            <AnimatePresence mode="popLayout">
+                {isAiOpen && (
+                    <motion.div
+                        initial={{ width: 0, opacity: 0 }}
+                        animate={{ width: "20rem", opacity: 1 }}
+                        exit={{ width: 0, opacity: 0 }}
+                        className="bg-white border-l border-zinc-200 flex flex-col z-10 overflow-hidden"
+                        style={{ width: "20rem" }}
+                    >
+                        <div className="p-3 border-b border-zinc-100 flex items-center justify-between">
+                            <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">AI Assistant</span>
+                            <button
+                                onClick={() => setIsAiOpen(false)}
+                                className="text-zinc-400 hover:text-zinc-600 p-1"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+                        <div className="flex-1 p-4 space-y-4 overflow-hidden relative min-w-[20rem]">
+                            {/* Previous messages history simulation could go here but simpler is better */}
+                            <AnimatePresence mode="popLayout">
+                                <motion.div
+                                    key={step}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="flex justify-start"
+                                >
+                                    <div className="bg-zinc-100 text-zinc-600 rounded-lg rounded-tl-none px-3 py-2 text-xs max-w-[85%]">
+                                        {DEMO_STATES[step === 0 ? 2 : step - 1].response}
+                                    </div>
+                                </motion.div>
 
-                        <motion.div
-                            layout
-                            className="mt-auto flex justify-end"
-                        >
-                            <div className="bg-black text-white rounded-lg rounded-tr-none px-3 py-2 text-xs shadow-md">
-                                {isTyping ? typedText : DEMO_STATES[step].command}
-                                <span className="animate-pulse">|</span>
-                            </div>
-                        </motion.div>
-                    </AnimatePresence>
-                </div>
+                                <motion.div
+                                    layout
+                                    className="mt-auto flex justify-end"
+                                >
+                                    <div className="bg-black text-white rounded-lg rounded-tr-none px-3 py-2 text-xs shadow-md">
+                                        {isTyping ? typedText : DEMO_STATES[step].command}
+                                        <span className="animate-pulse">|</span>
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
 
-                {/* Input Area Fake */}
-                <div className="p-3 border-t border-zinc-100 bg-zinc-50">
-                    <div className="h-8 bg-white border border-zinc-200 rounded-md shadow-sm w-full" />
-                </div>
-            </div>
+                        {/* Input Area Fake */}
+                        <div className="p-3 border-t border-zinc-100 bg-zinc-50 min-w-[20rem]">
+                            <div className="h-8 bg-white border border-zinc-200 rounded-md shadow-sm w-full" />
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
