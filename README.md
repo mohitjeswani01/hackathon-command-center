@@ -1,4 +1,4 @@
-# Hackathon Command Center 🦍
+# Hackathon Command Center 
 
 ### Orchestrate by Instinct.
 
