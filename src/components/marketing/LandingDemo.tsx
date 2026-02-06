@@ -34,38 +34,7 @@ export default function LandingDemo() {
 
     const currentState = DEMO_STATES[step];
 
-    useEffect(() => {
-        let timeout: NodeJS.Timeout;
 
-        const runSequence = async () => {
-            // 1. Type the command
-            setIsTyping(true);
-            const text = currentState.command;
-            for (let i = 0; i <= text.length; i++) {
-                setTypedText(text.slice(0, i));
-                await new Promise(r => setTimeout(r, 50));
-            }
-            setIsTyping(false);
-
-            // 2. Wait a bit
-            await new Promise(r => setTimeout(r, 800));
-
-            // 3. Move to next step (simulating "Submit")
-            if (step < DEMO_STATES.length - 1) {
-                setStep(s => s + 1);
-            } else {
-                setStep(0); // Loop back
-            }
-            setTypedText("");
-        };
-
-        runSequence();
-
-        return () => clearTimeout(timeout);
-    }, [step]); // Re-run when step changes is handled within the effect logic, but actually we need to trigger next step from effect.
-    // Correct logic: changing 'step' triggers the effect effectively.
-
-    // Better Loop Logic:
     useEffect(() => {
         let cancelled = false;
 
