@@ -91,25 +91,26 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
     } = useTamboThread();
 
     const deleteThread = React.useCallback(async (threadId: string) => {
-      const baseUrl = process.env.NEXT_PUBLIC_TAMBO_URL?.replace(/\/$/, "") || "https://api.tambo.ai/v1";
-      const apiKey = process.env.NEXT_PUBLIC_TAMBO_API_KEY;
+      console.log(`Deleting thread ${threadId} via local API proxy`);
 
       try {
-        const res = await fetch(`${baseUrl}/threads/${threadId}`, {
+        const res = await fetch(`/api/tambo/threads/${threadId}`, {
           method: "DELETE",
-          headers: {
-            "Authorization": `Bearer ${apiKey}`,
-          }
         });
 
         if (!res.ok) {
-          console.warn("Delete failed with status:", res.status);
-          // We might want to throw or handle error, but for now just log
+          console.error(`Delete failed: ${res.status} ${res.statusText}`);
+          try {
+            const text = await res.text();
+            console.error("Error details:", text);
+          } catch (e) { /* ignore */ }
+        } else {
+          console.log("Thread deleted successfully");
         }
         await refetch();
       } catch (e) {
         console.error("Error deleting thread:", e);
-        throw e;
+        // throw e; // Don't throw to avoid crashing UI if not handled up stack
       }
     }, [refetch]);
 
@@ -554,7 +555,7 @@ const ThreadHistoryList = React.forwardRef<
               editingThread?.id === thread.id ? "bg-muted" : "",
             )}
           >
-            <div className="text-sm flex-1">
+            <div className="text-sm flex-1 min-w-0">
               {editingThread?.id === thread.id ? (
                 <form
                   onSubmit={handleNameSubmit}
@@ -581,7 +582,7 @@ const ThreadHistoryList = React.forwardRef<
                 </form>
               ) : (
                 <>
-                  <span className="font-medium line-clamp-1">
+                  <span className="font-medium line-clamp-1 block">
                     {thread.name ?? `Thread ${thread.id.substring(0, 8)}`}
                   </span>
                   <p className="text-xs text-muted-foreground truncate mt-1">
@@ -643,15 +644,16 @@ const ThreadOptionsDropdown = ({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
         <button
-          className="p-1 hover:bg-backdrop rounded-md opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+          className="p-1 hover:bg-zinc-100 rounded-md opacity-0 group-hover:opacity-100 data-[state=open]:opacity-100 transition-opacity cursor-pointer shrink-0 ml-1"
           onClick={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
         >
-          <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+          <MoreHorizontal className="h-4 w-4 text-zinc-500" />
         </button>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="min-w-[160px] text-xs bg-popover rounded-md p-1 shadow-md border border-border"
+          className="min-w-[160px] text-xs bg-white text-zinc-900 rounded-md p-1 shadow-md border border-zinc-200 z-[100]"
           sideOffset={5}
           align="end"
         >

@@ -31,6 +31,17 @@ export default function Home() {
   const [isAiSidebarOpen, setIsAiSidebarOpen] = useState(true);
   // Generate a random session ID on mount to ensure a fresh chat session
   const [sessionId, setSessionId] = useState(() => Math.random().toString(36).substring(7));
+  const [userId, setUserId] = useState("");
+
+  useEffect(() => {
+    // Initialize user ID from local storage or generate a new one
+    let storedId = localStorage.getItem("tambo_user_id");
+    if (!storedId) {
+      storedId = Math.random().toString(36).substring(7);
+      localStorage.setItem("tambo_user_id", storedId);
+    }
+    setUserId(storedId);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -61,14 +72,17 @@ export default function Home() {
     };
   }, [isDragging]);
 
+  if (!userId) return null;
 
   return (
     <TamboProvider
       key={sessionId}
+      // @ts-ignore
+      sessionId={userId}
       apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
       components={components}
       tools={tools}
-      tamboUrl={process.env.NEXT_PUBLIC_TAMBO_URL}
+      tamboUrl={process.env.NEXT_PUBLIC_TAMBO_URL} // Ensure this env var is correct or undefined/null
       mcpServers={mcpServers}
     >
       <div className="flex flex-col h-screen bg-zinc-50 font-sans text-zinc-900 selection:bg-zinc-900 selection:text-white">
