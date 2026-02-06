@@ -26,15 +26,15 @@ export const submissions: Submission[] = [
     },
     {
         id: "s2",
-        title: "Smart Campus",
-        description: "IoT solution for monitoring university energy usage.",
+        title: "E-Commerce Platform ",
+        description: "A generative E-Commerce platform for local artisans to sell their crafts.",
         status: "reviewed",
         score: 8.5,
         isSolo: false,
         team: {
             id: "t2",
             name: "DataDrifters",
-            members: ["Sarah Chen", "Mike Ross", "Harvey Specter"]
+            members: ["Sahil Khurana", "Jiten Patel", "Anmol Singh"]
         }
     },
     {

@@ -14,11 +14,34 @@ import Countdown from "@/components/widgets/Countdown";
  * =========================
  */
 
+import type { Role } from "@/lib/roles";
+
+let pendingRole: Role | null = null;
+
 export const tools: TamboTool[] = [
   {
     name: "set-role",
     description: "Change the active user role in the hackathon",
     tool: ({ role }) => {
+      const currentRole = eventStore.getRole();
+
+      // IF already privileged, allow free switching
+      if (currentRole === "organizer" || currentRole === "judge") {
+        eventStore.setRole(role);
+        return { success: true, message: `Role switched to ${role} (privileged override).` };
+      }
+
+      // IF participant wants to become privileged -> CHALLENGE
+      if (currentRole === "participant" && (role === "organizer" || role === "judge")) {
+        pendingRole = role;
+        return {
+          success: false,
+          message: `Authentication required to switch to ${role}. Please enter the PIN.`
+        };
+      }
+
+      // OTHERWISE (participant -> participant, or downgrade?) 
+      // Actually participant -> participant is no-op, but safe to allow.
       eventStore.setRole(role);
       return { success: true };
     },
@@ -27,6 +50,37 @@ export const tools: TamboTool[] = [
     }),
     outputSchema: z.object({
       success: z.boolean(),
+      message: z.string().optional(),
+    }),
+  },
+  {
+    name: "verify-pin",
+    description: "Validate the PIN to complete a role switch",
+    tool: ({ pin }) => {
+      if (!pendingRole) {
+        return { success: false, message: "No pending role switch found. Ask to set role first." };
+      }
+
+      let isValid = false;
+      if (pendingRole === "organizer" && pin === "9999") isValid = true;
+      if (pendingRole === "judge" && pin === "5555") isValid = true;
+
+      if (isValid) {
+        const target = pendingRole;
+        eventStore.setRole(target);
+        pendingRole = null;
+        return { success: true, message: `Access granted. Role switched to ${target}.` };
+      } else {
+        pendingRole = null; // Security: access denied, clear state
+        return { success: false, message: "Incorrect PIN. Role switch cancelled." };
+      }
+    },
+    inputSchema: z.object({
+      pin: z.string().describe("The 4-digit PIN code"),
+    }),
+    outputSchema: z.object({
+      success: z.boolean(),
+      message: z.string().optional(),
     }),
   },
 

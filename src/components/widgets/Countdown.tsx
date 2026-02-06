@@ -41,7 +41,7 @@ export default function Countdown() {
     };
 
     return (
-        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm h-full flex flex-col justify-center items-center text-center">
+        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm flex flex-col justify-center items-center text-center">
 
             <div className={`transition-all duration-500 ${seconds < 300 ? "scale-110 text-red-600" : "text-zinc-900"}`}>
                 <div className="text-[72px] leading-none font-bold tracking-tighter tabular-nums font-mono">

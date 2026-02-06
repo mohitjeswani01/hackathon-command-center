@@ -135,7 +135,7 @@ export default function LandingPage() {
           <div className="w-6 h-6 bg-zinc-900 rounded flex items-center justify-center text-white text-[10px] font-bold">⌘</div>
           <span className="font-semibold text-zinc-900 tracking-tight">Hackathon Command Center</span>
         </div>
-        <p className="text-zinc-400 text-sm">Design by Antigravity. Powered by Tambo AI. © 2024</p>
+        <p className="text-zinc-400 text-sm">Design by Mohit Jeswani. Powered by Tambo AI. © 2026</p>
       </footer>
     </div>
   );
