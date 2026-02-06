@@ -77,8 +77,7 @@ export default function Home() {
   return (
     <TamboProvider
       key={sessionId}
-      // @ts-ignore
-      sessionId={userId}
+      contextKey={userId}
       apiKey={process.env.NEXT_PUBLIC_TAMBO_API_KEY!}
       components={components}
       tools={tools}

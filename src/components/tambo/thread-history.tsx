@@ -99,18 +99,39 @@ const ThreadHistory = React.forwardRef<HTMLDivElement, ThreadHistoryProps>(
         });
 
         if (!res.ok) {
-          console.error(`Delete failed: ${res.status} ${res.statusText}`);
+          console.warn("Proxy delete failed, attempting client-side fallback...");
           try {
-            const text = await res.text();
-            console.error("Error details:", text);
-          } catch (e) { /* ignore */ }
+            const baseUrl = process.env.NEXT_PUBLIC_TAMBO_URL?.replace(/\/$/, "") || "https://api.tambo.ai/v1";
+            const apiKey = process.env.NEXT_PUBLIC_TAMBO_API_KEY;
+
+            if (!apiKey) throw new Error("Missing API Key for fallback");
+
+            const fallbackRes = await fetch(`${baseUrl}/threads/${threadId}`, {
+              method: "DELETE",
+              headers: { "Authorization": `Bearer ${apiKey}` }
+            });
+
+            if (fallbackRes.ok) {
+              console.log("Thread deleted via fallback");
+              await refetch();
+              return;
+            } else {
+              const text = await fallbackRes.text();
+              console.error("Fallback error:", text);
+              // Show original error or fallback error. Let's show fallback error as it's the last attempt.
+              alert(`Failed to delete thread: ${text || fallbackRes.statusText}`);
+            }
+          } catch (fallbackError) {
+            console.error("Fallback exception:", fallbackError);
+            alert("Failed to delete thread via proxy and fallback.");
+          }
         } else {
           console.log("Thread deleted successfully");
+          await refetch();
         }
-        await refetch();
       } catch (e) {
         console.error("Error deleting thread:", e);
-        // throw e; // Don't throw to avoid crashing UI if not handled up stack
+        alert(`Error deleting thread: ${e instanceof Error ? e.message : String(e)}`);
       }
     }, [refetch]);
 
@@ -666,26 +687,6 @@ const ThreadOptionsDropdown = ({
           >
             <Pencil className="h-3 w-3" />
             Rename
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-foreground hover:bg-backdrop rounded-sm cursor-pointer outline-none transition-colors"
-            onClick={(e) => {
-              e.stopPropagation();
-              onGenerateName(thread);
-            }}
-          >
-            <Sparkles className="h-3 w-3" />
-            Generate Name
-          </DropdownMenu.Item>
-          <DropdownMenu.Item
-            className="flex items-center gap-2 px-2 py-1.5 text-destructive hover:bg-destructive/10 rounded-sm cursor-pointer outline-none transition-colors"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(thread);
-            }}
-          >
-            <Trash2 className="h-3 w-3" />
-            Delete
           </DropdownMenu.Item>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
