@@ -22,7 +22,7 @@ export default function JudgingQueue() {
     }
 
     return (
-        <div className="border border-zinc-200 rounded-xl bg-white shadow-sm h-full flex flex-col overflow-hidden">
+        <div className="border border-zinc-200 rounded-xl bg-white shadow-sm h-[500px] flex flex-col overflow-hidden">
             <div className="px-6 py-4 border-b border-zinc-50 flex justify-between items-center sticky top-0 bg-white z-10">
                 <h3 className="font-semibold text-zinc-400 uppercase tracking-wider text-[10px]">Review Queue</h3>
                 <span className="bg-zinc-900 text-white text-[10px] px-2 py-0.5 rounded-full font-medium">

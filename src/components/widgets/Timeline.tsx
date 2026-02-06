@@ -12,7 +12,7 @@ export default function Timeline() {
     const isOrganizer = role === 'organizer';
 
     return (
-        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm h-full flex flex-col justify-center">
+        <div className="border border-zinc-200 rounded-xl p-6 bg-white shadow-sm flex flex-col justify-center">
             <h3 className="font-semibold text-zinc-400 uppercase tracking-wider text-[10px] mb-6">Program Flow</h3>
 
             <div className="relative">
