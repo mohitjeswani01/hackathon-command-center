@@ -61,7 +61,7 @@ Focused purely on evaluating submissions.
 The default view for hackers.
 - **Capabilities**:
     - View global `Timeline` and `Countdown`.
-    - Check their own **Project Status** (Approved/Pending).
+    - Check their own **Project Status** (Reviewed/Pending).
     - Query the AI about team details ("What is the status of team DataDrifters?").
     - Query the AI about project details ("I am Mohit Jeswani What is the status of my project?").
 - **Restrictions**: Read-only access to event data.
